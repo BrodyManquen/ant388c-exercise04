@@ -1,0 +1,6 @@
+---
+title: "Wordle"
+format: html
+---
+
+## Play Wordle

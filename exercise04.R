@@ -37,16 +37,20 @@ length(solution[[1]])
 ## Step 4
 ### play_wordle() function
 evaluate_guess <- function(guess, solution){
-  result <- case_match(guess[[1]],
-                       str_extract(guess[[1]], solution[[1]]) ~ "+", ## finds correctly placed letters, sets to "+"
-                       intersect(guess[[1]], solution[[1]]) ~ "~",   ## finds incorrectly placed letters, sets to "~"
-                       .default = "-"                          ## finds letters *not* in solution, sets to "-"
-                      )
+  result <- str_replace_all(guess[[1]], pattern=solution[[1]], replacement="*") %>%
+    case_match(
+      "*" ~ "*",
+      intersect(guess[[1]], solution[[1]]) ~ "+",   ## finds incorrectly placed letters, sets to "+"
+      .default = "-"                                ## letters *not* in solution, sets to "-"
+      )
   return(result)
 }
 play_wordle <- function(solution, valid_list, num_guesses=6){
+  library("tidyverse")
   n_guess <- 1 #initialize guess count
   print(paste0("Welcome to my makeshift wordle! You have ", num_guesses, " to guess a ", length(solution[[1]]), " letter word.")) #initial statement
+  print("* is correct placement, + is incorrect placement, and - is an incorrect letter.")
+  print("Be careful! This game does not track duplicates: a + may show when the correct letter has been placed")
   letters_left <- LETTERS # do not override by putting in while loop
   word_length <- length(solution[[1]])
   while (n_guess <= num_guesses){ #while loop for guess counter
@@ -57,7 +61,7 @@ play_wordle <- function(solution, valid_list, num_guesses=6){
       evaluation <- evaluate_guess(guess, solution)
       print(evaluation)
       if (identical(guess[[1]], solution[[1]])) {
-        print("Correct!")
+        print(paste0("Correct! The solution is: ", paste(solution[[1]], collapse='')))
         break
       } else if (n_guess < num_guesses) {
         print("Guess again!")
@@ -81,21 +85,4 @@ full_wordle <- function(solution_list, word_length=5, valid_list, num_guesses=6)
 full_wordle(solution_list, valid_list)
 ### Testing Grounds
 test_run <- play_wordle(solution, valid_list)
-test <- c("A", "U", "D", "A", "T")
-solution[[1]]
-identical(test, solution[[1]])
-
-## to do: ensure that function doesn't put false "+" for duplicates (i.e., AUDIT returning +++++ for AUDAT)
-ev_gu_dummy <- function(test, solution){
-  result <- case_match(test,
-                       str_extract(test, solution[[1]]) ~ "+", ## finds correctly placed letters, sets to "+"
-                       intersect(test, solution[[1]]) ~ "~",   ## finds incorrectly placed letters, sets to "~"
-                       .default = "-"                          ## finds letters *not* in solution, sets to "-"
-  )
-  return(result)
-}
-str_extract(test, solution[[1]])
-dummy_est <- ev_gu_dummy(test, solution)
-dummy_est
-###
 

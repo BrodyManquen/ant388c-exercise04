@@ -88,7 +88,7 @@ play_wordle <- function(solution, solution_list, num_guesses=6){
   letters_left <- LETTERS # do not override by putting in while loop
   word_length <- length(solution[[1]])
   while (n_guess <= num_guesses){ #while loop for guess counter
-    print(paste0("Unguessed letters: ", letters_left)) #print unguessed letters
+    print(paste0("Unguessed letters: ", paste(letters_left, collapse=" "))) #print unguessed letters
     guess <- readline(paste0("Enter guess number ", n_guess, ": ")) %>% toupper() %>% str_split(pattern="") #parse guess
     if (length(guess[[1]])== word_length & paste(guess[[1]], collapse='') %in% solution_list) {
       letters_left <- setdiff(letters_left, guess[[1]]) #remove guessed letters from list
@@ -122,3 +122,4 @@ full_wordle <- function(solution_list, word_length=5, num_guesses=6){
   game <- play_wordle(solution, solution_list, num_guesses=6)
 }
 full_wordle(solution_list, valid_list)
+

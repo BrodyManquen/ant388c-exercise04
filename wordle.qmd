@@ -97,11 +97,11 @@ play_wordle <- function(solution, solution_list, num_guesses=6){
   while (n_guess <= num_guesses){ #while loop for guess counter
     print(paste0("Unguessed letters: ", paste(letters_left, collapse=" "))) #print unguessed letters
     guess <- readline(paste0("Enter guess number ", n_guess, ": ")) %>% toupper() %>% str_split(pattern="") #parse guess
-    if (length(guess[[1]])== word_length & paste(guess[[1]], collapse='') %in% solution_list) {
-      letters_left <- setdiff(letters_left, guess[[1]]) #remove guessed letters from list
+    if (length(guess[[1]])== word_length & paste(guess[[1]], collapse='') %in% solution_list) { # if statement -> only lets you guess words
+      letters_left <- setdiff(letters_left, guess[[1]]) #remove guessed letters from list       # of proper length & in solution list
       evaluation <- evaluate_guess(guess, solution)
-      print(evaluation)
-      if (identical(guess[[1]], solution[[1]])) {
+      print(evaluation) #show evaluation
+      if (identical(guess[[1]], solution[[1]])) { #output 3 options: Correct, Guess Again, or Incorrect/No More Guesses
         cat('\n')
         print(paste0("Correct! The solution is: ", paste(solution[[1]], collapse='')))
         break
@@ -119,19 +119,20 @@ play_wordle <- function(solution, solution_list, num_guesses=6){
 
     } else {
       cat('\n')
-      print(paste0("Entry invalid! Please enter a ", word_length, " letter word or a word in the game dictionary."))
+      print(paste0("Entry invalid! Please enter a ", word_length, " letter word or a word in the game dictionary.")) #prompt re-entry if invalid
       cat('\n')
     }
   }
 }
-full_wordle <- function(solution_list, word_length=5, num_guesses=6){
+```
+
+## Play the Game (hypothetically)
+```{r}
+# easy-call game function
+full_wordle <- function(solution_list, word_length=5, num_guesses=6){ #solution & game in one smaller function
   solution <- pick_solution(solution_list)
   game <- play_wordle(solution, solution_list, num_guesses=6)
 }
-```
-## Play the Game:
-```{r}
-#| include : FALSE
 
-full_wordle(solution_list, valid_list)
+##### full_wordle(solution_list) ##### would play the game, if able to knit interactives
 ```
